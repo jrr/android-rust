@@ -10,5 +10,5 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH /home/circleci/.cargo/bin:$PATH
 RUN $ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh --platform=android-28 --arch=arm64 --install-dir=/home/circleci/NDK/arm64
 COPY cargo-config /home/circleci/.cargo/config
-RUN rustup target add arm-linux-androideabi
+RUN rustup target add aarch64-linux-android
 RUN cargo install cargo-apk
