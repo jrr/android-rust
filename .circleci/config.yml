@@ -34,6 +34,7 @@ jobs:
       - checkout
       - run: cargo --version
       - run: echo ndk home $ANDROID_NDK_HOME
+      - run: rustc --print target-list |grep android
 
 
 workflows:
