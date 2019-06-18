@@ -1,0 +1,49 @@
+image_config: &image_config
+
+  # make sure to set your Docker Hub username & password in CircleCI,
+  # either as project-specific environment variables
+  # or as resources in your organization's org-global Context
+
+  IMAGE_NAME: android-rust
+
+  LINUX_VERSION: UBUNTU_XENIAL
+
+version: 2.1
+jobs:
+  build:
+    machine: true
+    environment:
+      <<: *image_config
+
+    steps:
+      - checkout
+
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - run: docker build -t $DOCKER_USERNAME/$IMAGE_NAME:$CIRCLE_SHA1 .
+
+      - run: docker push $DOCKER_USERNAME/$IMAGE_NAME:$CIRCLE_SHA1 && sleep 10
+
+  test_image:
+    docker:
+      - image: $DOCKER_USERNAME/$IMAGE_NAME:$CIRCLE_SHA1
+        environment:
+          <<: *image_config
+
+    steps:
+      - checkout
+      - run: cargo --version
+      - run: echo ndk home $ANDROID_NDK_HOME
+
+
+workflows:
+  version: 2
+  dockerfile_wizard:
+    jobs:
+      - build:
+          context: org-global
+
+      - test_image:
+          context: org-global
+          requires:
+            - build
