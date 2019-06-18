@@ -8,6 +8,6 @@ RUN sudo apt-get install -yq sudo curl wget git file g++ cmake pkg-config \
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH /home/circleci/.cargo/bin:$PATH
+RUN $ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh --platform=android-28 --arch=arm64 --install-dir=/home/circleci/NDK/arm64
 RUN rustup target add arm-linux-androideabi
 RUN cargo install cargo-apk
-RUN $ANDROID_NDK_HOME/build/tools/make-standalone-toolchain.sh --platform=android-28 --arch=arm64 --install-dir=/home/circleci/NDK/arm64
